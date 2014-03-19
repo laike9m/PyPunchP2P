@@ -69,11 +69,15 @@ class Client():
                     print "received msg from target, periodic send cancelled, chat start."
                 if addr == self.target or addr == self.master:
                     sys.stdout.write(data)
+                    if data == "punching...\n":
+                        sock.sendto("end punching\n", addr)
         else:
             while True:
                 data, addr = sock.recvfrom(1024)
                 if addr == self.target or addr == self.master:
                     sys.stdout.write(data)
+                    if data == "punching...\n":
+                        sock.sendto("end punching", addr)
 
     def send_msg(self, sock):
         while True:
@@ -89,8 +93,8 @@ class Client():
         cancel_event = Event()
 
         def send(count):
-            self.sockfd.sendto('torr\n', self.target)
-            print("send UDP punching package {0}".format(count))
+            self.sockfd.sendto('punching...\n', self.target)
+            print("UDP punching package {0} sent".format(count))
             if self.periodic_running:
                 Timer(0.5, send, args=(count + 1,)).start()
 
