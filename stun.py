@@ -98,7 +98,7 @@ def _initialize():
 def gen_tran_id():
     a = ''
     for i in xrange(32):
-        a += random.choice('0123456789ABCDEF')
+        a += random.choice('0123456789ABCDEF')  # RFC3489 128bits transaction ID
     #return binascii.a2b_hex(a)
     return a
 
@@ -146,7 +146,7 @@ def stun_test(sock, host, port, source_ip, source_port, send_data=""):
                 attr_type = binascii.b2a_hex(buf[base:(base + 2)])
                 attr_len = int(binascii.b2a_hex(buf[(base + 2):(base + 4)]),
                                16)
-                if attr_type == MappedAddress:
+                if attr_type == MappedAddress:  # first two bytes: 0x0001
                     port = int(binascii.b2a_hex(buf[base + 6:base + 8]), 16)
                     ip = ".".join([
                     str(int(binascii.b2a_hex(buf[base + 8:base + 9]), 16)),
@@ -227,11 +227,9 @@ def get_nat_type(s, source_ip, source_port, stun_host=None, stun_port=3478):
                 typ = ChangedAddressError
             else:
                 if exIP == ret['ExternalIP'] and exPort == ret['ExternalPort']:
-                    changePortRequest = ''.join([ChangeRequest, '0004',
-                                                 "00000002"])
+                    changePortRequest = ''.join([ChangeRequest, '0004', "00000002"])
                     log.debug("Do Test3")
-                    ret = stun_test(s, changedIP, port, source_ip, source_port,
-                                    changePortRequest)
+                    ret = stun_test(s, changedIP, port, source_ip, source_port, changePortRequest)
                     log.debug("Result: %s" % ret)
                     if ret['Resp'] == True:
                         typ = RestrictNAT

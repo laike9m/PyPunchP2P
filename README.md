@@ -24,9 +24,9 @@ $ client.py 1.2.3.4 5678 100
 ```  
 The number `100` is used to match clients, i.e. clients with the same number will be linked by server.
 
-Note
+Test
 ----
-These scripts haven't been tested under real environment of restrict/symmetric NAT in that I don't have such devices or environment. But I think it will work fine cause I've done some simulation testing. Here's how: specify a fourth parameter of `client.py`, it will assume that your client is behind a specific type of NAT device.
+You could do simulation testing by specifying a fourth parameter of `client.py`, it will assume that your client is behind a specific type of NAT device.
 
 Here are the corresponding NAT type and number:  
 
