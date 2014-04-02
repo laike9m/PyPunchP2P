@@ -1,7 +1,8 @@
 PyPunchP2P
 ==========
 
-Python p2p chat client/server with built-in NAT traversal (UDP hole punching).
+Python p2p chat client/server with built-in NAT traversal (UDP hole punching).  
+I've write [an article][4] about the detailed implementation (in Chinese).
 
 Based on  
 [koenbollen's gist][1]  
@@ -44,6 +45,7 @@ pretending your client is behind RestrictNAT.
 [1]:https://gist.github.com/koenbollen/464613
 [2]:https://pypi.python.org/pypi/pystun
 [3]:http://www.bford.info/pub/net/p2pnat/index.html
+[4]:http://www.laike9m.com/blog/pythonshi-xian-stunturnp2pliao-tian,29/
 
 
 
