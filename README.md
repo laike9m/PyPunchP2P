@@ -12,20 +12,21 @@ Based on
 Python edition: py2.6+ but no Python 3 support  
 Platform: Linux/Windows
 
-usage
+Usage
 -----
 Suppose you run server.py on a VPS with ip 1.2.3.4, listening on port 5678  
 ```bash
 $ server.py 5678
 ```  
 
-client A and client B:  
+On client A and client B (run this on both clients):  
 ```bash
 $ client.py 1.2.3.4 5678 100  
 ```  
-The number `100` is used to match clients, i.e. clients with the same number will be linked by server.
+The number `100` is used to match clients, you can choose any number you like but only clients with the **same** number will be linked by server. If two clients get linked, two people can chat by typing in terminal, and once you hit `<ENTER>` your partner will see your message in his terminal.   
+Encoding is a known issue since I didn't pay much effort on making this tool perfect, but as long as you type English it will be fine.
 
-Test
+Test Mode
 ----
 You could do simulation testing by specifying a fourth parameter of `client.py`, it will assume that your client is behind a specific type of NAT device.
 
@@ -40,7 +41,12 @@ So you might run
 ```bash
 $ client.py 1.2.3.4 5678 100 1
 ```   
-pretending your client is behind RestrictNAT.
+pretending your client is behind RestrictNAT.  
+You can test the relay server functionality by making `3` as the forth parameter, since if one client is behind symmetric NAT, there will be no direct connection but server forwaring.
+
+License
+-------
+MIT
 
 [1]:https://gist.github.com/koenbollen/464613
 [2]:https://pypi.python.org/pypi/pystun
