@@ -13,7 +13,8 @@ FullCone = "Full Cone"  # 0
 RestrictNAT = "Restrict NAT"  # 1
 RestrictPortNAT = "Restrict Port NAT"  # 2
 SymmetricNAT = "Symmetric NAT"  # 3
-NATTYPE = (FullCone, RestrictNAT, RestrictPortNAT, SymmetricNAT)
+UnknownNAT = "Unknown NAT" # 4
+NATTYPE = (FullCone, RestrictNAT, RestrictPortNAT, SymmetricNAT, UnknownNAT)
 
 
 def bytes2addr(bytes):
@@ -76,7 +77,7 @@ class Client():
                 data, addr = sock.recvfrom(1024)
                 if addr == self.target or addr == self.master:
                     sys.stdout.write(data)
-                    if data == "punching...\n":
+                    if data == "punching...\n":  # peer是restrict
                         sock.sendto("end punching", addr)
 
     def send_msg(self, sock):
@@ -137,6 +138,11 @@ class Client():
             self.request_for_connection(nat_type_id=NATTYPE.index(nat_type))
         except ValueError:
             print("NAT type is %s" % nat_type)
+            self.request_for_connection(nat_type_id=4)  # Unknown NAT
+
+        if nat_type == UnknownNAT or self.peer_nat_type == UnknownNAT:
+            print("Symmetric chat mode")
+            self.chat_symmetric()
         if nat_type == SymmetricNAT or self.peer_nat_type == SymmetricNAT:
             print("Symmetric chat mode")
             self.chat_symmetric()

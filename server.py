@@ -10,8 +10,8 @@ FullCone = "Full Cone"  # 0
 RestrictNAT = "Restrict NAT"  # 1
 RestrictPortNAT = "Restrict Port NAT"  # 2
 SymmetricNAT = "Symmetric NAT"  # 3
-NATTYPE = (FullCone, RestrictNAT, RestrictPortNAT, SymmetricNAT)
-
+UnknownNAT = "Unknown NAT" # 4
+NATTYPE = (FullCone, RestrictNAT, RestrictPortNAT, SymmetricNAT, UnknownNAT)
 
 def addr2bytes(addr, nat_type_id):
     """Convert an address pair to a hash."""
