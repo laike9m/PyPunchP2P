@@ -4,7 +4,7 @@ PyPunchP2P
 ### THIS PROJECT IS FOR STUDYING AND VERIFICATION, DON'T USE IT IN PRODUCTION.
 
 Python p2p chat client/server with built-in NAT traversal (UDP hole punching).  
-I've write [an article][4] about the detailed implementation (in Chinese).
+I've written [an article][4] about the detailed implementation (in Chinese).
 
 Based on  
 [koenbollen's gist][1]  
