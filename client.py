@@ -5,6 +5,7 @@ import optparse
 import sys
 import struct
 import socket
+import time
 from threading import Thread, Event
 
 import stun
@@ -85,9 +86,20 @@ class Client():
             data = sys.stdin.readline()
             sock.sendto(data, self.target)
 
+    @staticmethod
+    def start_working_threads(send, recv, event=None, *args, **kwargs):
+        ts = Thread(target=send, args=args, kwargs=kwargs)
+        ts.setDaemon(True)
+        ts.start()
+        if event:
+            event.wait()
+        tr = Thread(target=recv, args=args, kwargs=kwargs)
+        tr.setDaemon(True)
+        tr.start()
+
     def chat_fullcone(self):
-        Thread(target=self.send_msg, args=(self.sockfd,)).start()
-        Thread(target=self.recv_msg, args=(self.sockfd,)).start()
+        self.start_working_threads(self.send_msg, self.recv_msg, None,
+                                   self.sockfd)
 
     def chat_restrict(self):
         from threading import Timer
@@ -102,9 +114,8 @@ class Client():
         self.periodic_running = True
         send(0)
         kwargs = {'is_restrict': True, 'event': cancel_event}
-        Thread(target=self.recv_msg, args=(self.sockfd,), kwargs=kwargs).start()
-        cancel_event.wait()
-        Thread(target=self.send_msg, args=(self.sockfd,)).start()
+        self.start_working_threads(self.send_msg, self.recv_msg,
+                                   cancel_event, self.sockfd, **kwargs)
 
     def chat_symmetric(self):
         """
@@ -120,8 +131,8 @@ class Client():
                 data, addr = sock.recvfrom(1024)
                 if addr == self.master:
                     sys.stdout.write(data)
-        Thread(target=send_msg_symm, args=(self.sockfd,)).start()
-        Thread(target=recv_msg_symm, args=(self.sockfd,)).start()
+        self.start_working_threads(send_msg_symm, recv_msg_symm, None,
+                                   self.sockfd)
 
     def main(self, test_nat_type=None):
         """
@@ -154,6 +165,13 @@ class Client():
             self.chat_restrict()
         else:
             print("NAT type wrong!")
+
+        while True:
+            try:
+                time.sleep(0.5)
+            except KeyboardInterrupt:
+                print("exit")
+                sys.exit(0)
 
     @staticmethod
     def get_nat_type():
@@ -189,4 +207,5 @@ if __name__ == "__main__":
         test_nat_type = NATTYPE[int(sys.argv[4])]  # 输入数字0,1,2,3
     except IndexError:
         test_nat_type = None
+
     c.main(test_nat_type)
